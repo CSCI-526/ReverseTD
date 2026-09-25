@@ -5,7 +5,7 @@ The board, path, and towers, by Ryoonki (`earl-kayy`). This page covers what you
 - `Assets/Shared/`: the combat contract your soldiers implement.
 - `Assets/Defense/`: the board, path, and towers.
 
-Please don't edit these two folders. If you need a change, ask me.
+You shouldn't need to change anything in these two folders. Put your scripts in your own folder and use them from there. If something's missing, tell me and we'll change it together.
 
 ## Try it
 
