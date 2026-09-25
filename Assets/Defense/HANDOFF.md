@@ -9,7 +9,7 @@ Please don't edit these two folders. If you need a change, ask me.
 
 ## Try it
 
-Run `Tools > RK > Build Defense Sandbox`, then press Play. Dummy soldiers walk the path, towers shoot them, and the dummies hit the towers back.
+Open `Assets/Defense/Scenes/DefenseSandbox.unity` and press Play. Dummy soldiers walk the path, towers shoot them, and the dummies hit the towers back.
 
 ## Put the board in your scene
 
