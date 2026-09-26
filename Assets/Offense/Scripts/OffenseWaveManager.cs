@@ -16,6 +16,9 @@ namespace ReverseTD.Offense
         [SerializeField, Tooltip("Persistent upgrade and currency data.")]
         private OffenseData offenseData;
 
+        [SerializeField, Tooltip("Attack range for spawned soldiers.")]
+        private float soldierAttackRange = 2f;
+
         [Header("Wave Settings")]
         [SerializeField, Min(0f), Tooltip("Seconds between soldier spawns.")]
         private float interval = 0.6f;
@@ -96,7 +99,7 @@ namespace ReverseTD.Offense
             soldierObject.transform.SetParent(transform, false);
 
             var soldier = soldierObject.AddComponent<OffenseSoldier>();
-            soldier.Initialize(board.Path, offenseData);
+            soldier.Initialize(board.Path, offenseData, soldierAttackRange);
 
             soldierObject.SetActive(true);
             livingUnits++;

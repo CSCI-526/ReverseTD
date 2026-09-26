@@ -1,57 +1,98 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UpgradeSceneUI : MonoBehaviour
 {
-    [SerializeField] private OffenseData data;
-    [SerializeField] private string battleSceneName = "DefenseSandbox";
+    [Header("Data Asset")]
+    [SerializeField] private OffenseData offenseData;
 
-    [Header("UI Text Displays")]
+    [Header("Scene Loading")]
+    [SerializeField] private string gameplaySceneName = "DefenseSandbox";
+
+    [Header("Gold Display")]
     [SerializeField] private TMP_Text goldText;
-    [SerializeField] private TMP_Text healthBtnText;
-    [SerializeField] private TMP_Text damageBtnText;
-    [SerializeField] private TMP_Text spawnCountBtnText;
+
+    [Header("Buttons")]
+    [SerializeField] private Button hpUpgradeButton;
+    [SerializeField] private TMP_Text hpButtonText;
+
+    [SerializeField] private Button atkUpgradeButton;
+    [SerializeField] private TMP_Text atkButtonText;
+
+    [SerializeField] private Button unitUpgradeButton;
+    [SerializeField] private TMP_Text unitButtonText;
+
+    [SerializeField] private Button startGameButton;
 
     private void Start()
     {
+        // Hook up button click listeners
+        hpUpgradeButton.onClick.AddListener(OnUpgradeHPClicked);
+        atkUpgradeButton.onClick.AddListener(OnUpgradeATKClicked);
+        unitUpgradeButton.onClick.AddListener(OnUpgradeUnitsClicked);
+        startGameButton.onClick.AddListener(OnStartGameClicked);
+
         RefreshUI();
-    }
-
-    public void OnBuyHealth()
-    {
-        if (data != null && data.BuyHealthUpgrade()) RefreshUI();
-    }
-
-    public void OnBuyDamage()
-    {
-        if (data != null && data.BuyDamageUpgrade()) RefreshUI();
-    }
-
-    public void OnBuySpawnCount()
-    {
-        if (data != null && data.BuySpawnCountUpgrade()) RefreshUI();
-    }
-
-    public void OnStartNextRun()
-    {
-        SceneManager.LoadScene(battleSceneName);
     }
 
     private void RefreshUI()
     {
-        if (data == null) return;
+        if (offenseData == null) return;
 
-        if (goldText) goldText.text = $"Gold: {FormatNumber(data.gold)}";
-        if (healthBtnText) healthBtnText.text = $"+HP (Lv.{data.healthLevel})\nCost: {FormatNumber(data.GetHealthCost())}";
-        if (damageBtnText) damageBtnText.text = $"+DMG (Lv.{data.damageLevel})\nCost: {FormatNumber(data.GetDamageCost())}";
-        if (spawnCountBtnText) spawnCountBtnText.text = $"+1 Unit (Cap: {data.TotalSpawnCount})\nCost: {FormatNumber(data.GetSpawnCountCost())}";
+        // Gold display
+        goldText.text = $"$ {offenseData.gold:N0}";
+
+        // Costs
+        double hpCost = offenseData.GetHealthCost();
+        double atkCost = offenseData.GetDamageCost();
+        double unitCost = offenseData.GetSpawnCountCost();
+
+        // Button labels
+        if (hpButtonText != null)
+            hpButtonText.text = $"HP (Lv {offenseData.healthLevel})\nCost: {hpCost:N0}";
+
+        if (atkButtonText != null)
+            atkButtonText.text = $"ATK (Lv {offenseData.damageLevel})\nCost: {atkCost:N0}";
+
+        if (unitButtonText != null)
+            unitButtonText.text = $"Units (Lv {offenseData.spawnCountLevel})\nCost: {unitCost:N0}";
+
+        // Button interactability based on current gold
+        hpUpgradeButton.interactable = offenseData.gold >= hpCost;
+        atkUpgradeButton.interactable = offenseData.gold >= atkCost;
+        unitUpgradeButton.interactable = offenseData.gold >= unitCost;
     }
 
-    private string FormatNumber(double num)
+    private void OnUpgradeHPClicked()
     {
-        if (num >= 1000000) return (num / 1000000D).ToString("0.##") + "M";
-        if (num >= 1000) return (num / 1000D).ToString("0.##") + "K";
-        return num.ToString("0");
+        if (offenseData.BuyHealthUpgrade())
+            RefreshUI();
+    }
+
+    private void OnUpgradeATKClicked()
+    {
+        if (offenseData.BuyDamageUpgrade())
+            RefreshUI();
+    }
+
+    private void OnUpgradeUnitsClicked()
+    {
+        if (offenseData.BuySpawnCountUpgrade())
+            RefreshUI();
+    }
+
+    private void OnStartGameClicked()
+    {
+        SceneManager.LoadScene(gameplaySceneName);
+    }
+
+    private void OnDestroy()
+    {
+        hpUpgradeButton.onClick.RemoveAllListeners();
+        atkUpgradeButton.onClick.RemoveAllListeners();
+        unitUpgradeButton.onClick.RemoveAllListeners();
+        startGameButton.onClick.RemoveAllListeners();
     }
 }

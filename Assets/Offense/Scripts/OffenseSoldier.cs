@@ -38,7 +38,7 @@ namespace ReverseTD.Offense
             path = stagePath;
             offenseData = data;
 
-            // Pull values dynamically from your persistent upgrade data
+            // Pull values dynamically from persistent upgrade data
             maxHp = data != null ? data.MaxHealth : 5f;
             hp = maxHp;
             speed = 1.0f;
